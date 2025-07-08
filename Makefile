@@ -1,6 +1,3 @@
-# I copied util/java.make for now, since I don't know how make works :)
-# todo: understand exactly how this works. to start: https://www.youtube.com/watch?v=_Ms1Z4xfqv4&t=6s
-
 default: jlox
 
 jlox:

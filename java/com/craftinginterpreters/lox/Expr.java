@@ -4,10 +4,27 @@ import java.util.List;
 
 abstract class Expr {
   interface Visitor<R> {
+    R visitConditionalExpr(Conditional expr);
     R visitBinaryExpr(Binary expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+  }
+  static class Conditional extends Expr {
+    Conditional(Expr conditional, Expr thenBranch, Expr elseBranch) {
+      this.conditional = conditional;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitConditionalExpr(this);
+    }
+
+    final Expr conditional;
+    final Expr thenBranch;
+    final Expr elseBranch;
   }
   static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
