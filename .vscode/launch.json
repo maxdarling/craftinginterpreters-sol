@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Lox REPL",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "com.craftinginterpreters.lox.Lox",
+            "args": [],
+            "console": "integratedTerminal",
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}",
+            "vmArgs": "-Dfile.encoding=UTF-8",
+            "preLaunchTask": "build-project"
+        },
+        {
+            "name": "Debug Lox File",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "com.craftinginterpreters.lox.Lox",
+            "args": ["${input:loxFile}"],
+            "console": "integratedTerminal",
+            "stopOnEntry": false,
+            "cwd": "${workspaceFolder}",
+            "vmArgs": "-Dfile.encoding=UTF-8",
+            "preLaunchTask": "build-project"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "loxFile",
+            "description": "Enter the Lox file to debug:",
+            "default": "test.txt",
+            "type": "promptString"
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+{
+    "java.project.sourcePaths": ["java"],
+    "java.project.outputPath": "build/java"
+}
