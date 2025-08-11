@@ -4,27 +4,27 @@ import java.util.List;
 
 abstract class Expr {
   interface Visitor<R> {
-    R visitConditionalExpr(Conditional expr);
+    R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitUnaryExpr(Unary expr);
+    R visitVariableExpr(Variable expr);
+    R visitConditionalExpr(Conditional expr);
   }
-  static class Conditional extends Expr {
-    Conditional(Expr conditional, Expr thenBranch, Expr elseBranch) {
-      this.conditional = conditional;
-      this.thenBranch = thenBranch;
-      this.elseBranch = elseBranch;
+  static class Assign extends Expr {
+    Assign(Token name, Expr value) {
+      this.name = name;
+      this.value = value;
     }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-      return visitor.visitConditionalExpr(this);
+      return visitor.visitAssignExpr(this);
     }
 
-    final Expr conditional;
-    final Expr thenBranch;
-    final Expr elseBranch;
+    final Token name;
+    final Expr value;
   }
   static class Binary extends Expr {
     Binary(Expr left, Token operator, Expr right) {
@@ -79,6 +79,34 @@ abstract class Expr {
 
     final Token operator;
     final Expr right;
+  }
+  static class Variable extends Expr {
+    Variable(Token name) {
+      this.name = name;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitVariableExpr(this);
+    }
+
+    final Token name;
+  }
+  static class Conditional extends Expr {
+    Conditional(Expr conditional, Expr thenBranch, Expr elseBranch) {
+      this.conditional = conditional;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitConditionalExpr(this);
+    }
+
+    final Expr conditional;
+    final Expr thenBranch;
+    final Expr elseBranch;
   }
 
   abstract <R> R accept(Visitor<R> visitor);
