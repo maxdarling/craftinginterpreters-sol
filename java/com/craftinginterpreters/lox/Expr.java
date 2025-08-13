@@ -6,11 +6,12 @@ abstract class Expr {
   interface Visitor<R> {
     R visitAssignExpr(Assign expr);
     R visitBinaryExpr(Binary expr);
+    R visitConditionalExpr(Conditional expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
+    R visitLogicalExpr(Logical expr);
     R visitUnaryExpr(Unary expr);
     R visitVariableExpr(Variable expr);
-    R visitConditionalExpr(Conditional expr);
   }
   static class Assign extends Expr {
     Assign(Token name, Expr value) {
@@ -42,6 +43,22 @@ abstract class Expr {
     final Token operator;
     final Expr right;
   }
+  static class Conditional extends Expr {
+    Conditional(Expr conditional, Expr thenBranch, Expr elseBranch) {
+      this.conditional = conditional;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitConditionalExpr(this);
+    }
+
+    final Expr conditional;
+    final Expr thenBranch;
+    final Expr elseBranch;
+  }
   static class Grouping extends Expr {
     Grouping(Expr expression) {
       this.expression = expression;
@@ -65,6 +82,22 @@ abstract class Expr {
     }
 
     final Object value;
+  }
+  static class Logical extends Expr {
+    Logical(Expr left, Token operator, Expr right) {
+      this.left = left;
+      this.operator = operator;
+      this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitLogicalExpr(this);
+    }
+
+    final Expr left;
+    final Token operator;
+    final Expr right;
   }
   static class Unary extends Expr {
     Unary(Token operator, Expr right) {
@@ -91,22 +124,6 @@ abstract class Expr {
     }
 
     final Token name;
-  }
-  static class Conditional extends Expr {
-    Conditional(Expr conditional, Expr thenBranch, Expr elseBranch) {
-      this.conditional = conditional;
-      this.thenBranch = thenBranch;
-      this.elseBranch = elseBranch;
-    }
-
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-      return visitor.visitConditionalExpr(this);
-    }
-
-    final Expr conditional;
-    final Expr thenBranch;
-    final Expr elseBranch;
   }
 
   abstract <R> R accept(Visitor<R> visitor);

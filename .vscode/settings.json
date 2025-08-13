@@ -1,4 +1,9 @@
 {
     "java.project.sourcePaths": ["java"],
-    "java.project.outputPath": "build/java"
+    "java.project.outputPath": "build/java",
+    "[java]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+      },
 }
