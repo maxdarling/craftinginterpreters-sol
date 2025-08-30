@@ -1,0 +1,68 @@
+notes:
+- precedence and associativity are baked into the grammar. [some grammars](https://www.lysator.liu.se/c/ANSI-C-grammar-y.html) do it like this, others use different notation.
+- reminder: statements and expressions are fundamentally different. expressions evaluate to values. statements don't have values, but have side effects.
+- as is common practice, declarations are distinguished from statements since their nesting can make for weird code (e.g. a var dec in an else branch. see 8.2.1)
+
+changelog:
+- ch 6: add expressions. exercises: add ternary operator, comma operator, basic error productions.
+- ch 8: add statements.
+- ch 9: add control flow statements: if, while, for. add logical operators: or, and.
+- ch 10: add function declaration, call, return statements. exercises: add lambdas.
+
+program        → declaration* EOF ;
+
+declaration    → funDecl
+               | varDecl
+               | statement ;
+
+funDecl        → "fun" IDENTIFIER functionBody ;
+functionBody   → "(" parameters? ")" block ;
+
+varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+
+statement      → exprStmt
+               | forStmt
+               | ifStmt
+               | printStmt
+               | returnStmt
+               | whileStmt
+               | block
+               | break ;
+
+exprStmt       → expression ";" ;
+forStmt        → "for" "(" ( varDecl | exprStmt | ";" )
+                 expression? ";"
+                 expression? ")" statement ;
+ifStmt         → "if" "(" expression ")" statement
+               ( "else" statement )? ;
+printStmt      → "print" expression ";" ;
+returnStmt     → "return" expression? ";" ;
+whileStmt      → "while" "(" expression ")" statement ;
+block          → "{" declaration* "}" ;
+break          → "break;" ;
+
+expression     → comma ;
+comma          → assignment ( "," assignment )* ;
+assignment     → IDENTIFIER "=" assignment
+               | conditional ;
+conditional    → logic_or ( "?" expression ":" conditional )?
+               | logic_or ;
+logic_or       → logic_and ( "or" logic_and )* ;
+logic_and      → equality ( "and" equality )* ;
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison     → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term           → factor ( ( "-" | "+" ) factor )* ;
+factor         → unary ( ( "/" | "*" ) unary )* ;
+unary          → ( "!" | "-" ) unary
+               | call ;
+call           → primary ( "(" arguments? ")" )* ;
+arguments      → expression ( "," expression )* ;
+primary        → NUMBER | STRING | "true" | "false" | "nil"
+               | "fun" functionBody
+               | "(" expression ")"
+               | IDENTIFIER ;
+               // Error productions...
+               | ( "!=" | "==" ) equality
+               | ( ">" | ">=" | "<" | "<=" ) comparison
+               | ( "+" ) term
+               | ( "/" | "*" ) factor ;

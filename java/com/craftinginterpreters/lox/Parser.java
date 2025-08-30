@@ -49,6 +49,11 @@ class Parser {
 
   private Stmt declaration() {
     try {
+      // edgecase: lamba expr statement, e.g. `fun () {};`
+      if (check(FUN) && checkNext(IDENTIFIER)) {
+        consume(FUN, null);
+        return function("function");
+      }
       if (match(VAR)) return varDeclaration();
 
       return statement();
@@ -56,6 +61,30 @@ class Parser {
       synchronize();
       return null;
     }
+  }
+
+  private Stmt.Function function(String kind) {
+    Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+    return new Stmt.Function(name, functionBody(kind));
+  }
+
+  private Expr.Function functionBody(String kind) {
+    consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    List<Token> parameters = new ArrayList<>();
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (parameters.size() >= 255) {
+          error(peek(), "Can't have more than 255 parameters.");
+        }
+
+        parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+      } while (match(COMMA));
+    }
+    consume(RIGHT_PAREN, "Expect ')' after parameters.");
+
+    consume(LEFT_BRACE, "Expect '{' before function body.");
+    List<Stmt> body = block();
+    return new Expr.Function(parameters, body);
   }
 
   private Stmt varDeclaration() {
@@ -74,6 +103,7 @@ class Parser {
     if (match(FOR)) return forStatement();
     if (match(IF)) return ifStatement();
     if (match(PRINT)) return printStatement();
+    if (match(RETURN)) return returnStatement();
     if (match(WHILE)) return whileStatement();
     if (match(BREAK)) return breakStatement();
     if (match(LEFT_BRACE)) return new Stmt.Block(block());
@@ -149,6 +179,17 @@ class Parser {
     return new Stmt.Print(value);
   }
 
+  private Stmt returnStatement() {
+    Token keyword = previous();
+    Expr value = null;
+    if (!check(SEMICOLON)) {
+      value = expression();
+    }
+
+    consume(SEMICOLON, "Expect ';' after return value.");
+    return new Stmt.Return(keyword, value);
+  }
+
   private Stmt expressionStatement() {
     Expr expr = expression();
     if (allowExpression && isAtEnd()) {
@@ -194,11 +235,27 @@ class Parser {
   }
 
   private Expr expression() {
-    return assignment();
+    return comma();
   }
 
+  // : encapsulate this and all other higher-precedence expr matching funcs into a single func parameterized on
+  // operator and operand type. we can do this because all take the form A = B ((op1 | op2 | ...) B)*
+  // i.e., it's left associate, and done in this flat while loop style. analog could be done for r-assoc, too.
+  private Expr comma() {
+    Expr expr = assignment();
+
+    while (match(COMMA)) {
+      Token operator = previous();
+      Expr right = assignment();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+
+    return expr;
+  }
+
+
   private Expr assignment() {
-    Expr expr = comma();
+    Expr expr = conditional();
 
     if (match(EQUAL)) {
       Token equals = previous();
@@ -210,20 +267,6 @@ class Parser {
       }
 
       error(equals, "Invalid assignment target.");
-    }
-
-    return expr;
-  }
-
-  // refactor: encapsulate this and all other higher-precedence expr matching funcs into a single func parameterized on
-  // operator and operand type. we can do this because all take the form A = B ((op1 | op2 | ...) B)*
-  private Expr comma() {
-    Expr expr = conditional();
-
-    while (match(COMMA)) {
-      Token operator = previous();
-      Expr right = conditional();
-      expr = new Expr.Binary(expr, operator, right);
     }
 
     return expr;
@@ -321,13 +364,45 @@ class Parser {
       return new Expr.Unary(operator, right);
     }
 
-    return primary();
+    return call();
+  }
+
+  private Expr call() {
+    Expr expr = primary();
+
+    while (true) {
+      if (match(LEFT_PAREN)) {
+        expr = finishCall(expr);
+      } else {
+        break;
+      }
+    }
+
+    return expr;
+  }
+
+  private Expr finishCall(Expr callee) {
+    List<Expr> arguments = new ArrayList<>();
+    if (!check(RIGHT_PAREN)) {
+      do {
+        if (arguments.size() >= 255) {
+          error(peek(), "Can't have more than 255 arguments.");
+        }
+        arguments.add(conditional()); // subtle: skip over comma expressions so foo(a,b) doesn't get parsed as foo((a,b))
+      } while (match(COMMA));
+    }
+
+    Token paren = consume(RIGHT_PAREN, "Expect ')' after arguments.");
+
+    return new Expr.Call(callee, paren, arguments);
   }
 
   private Expr primary() {
     if (match(FALSE)) return new Expr.Literal(false);
     if (match(TRUE)) return new Expr.Literal(true);
     if (match(NIL)) return new Expr.Literal(null);
+
+    if (match(FUN)) return functionBody("function");
 
     if (match(NUMBER, STRING)) {
       return new Expr.Literal(previous().literal);
@@ -395,6 +470,12 @@ class Parser {
   private boolean check(TokenType type) {
     if (isAtEnd()) return false;
     return peek().type == type;
+  }
+
+  private boolean checkNext(TokenType type) {
+    if (isAtEnd()) return false;
+    if (tokens.get(current + 1).type == EOF) return false;
+    return tokens.get(current + 1).type == type;
   }
 
   private Token advance() {
