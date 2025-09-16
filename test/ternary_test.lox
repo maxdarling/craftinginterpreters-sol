@@ -1,0 +1,57 @@
+// Test ternary conditional operator (condition ? true_expr : false_expr)
+print "=== Ternary Operator Tests ===";
+
+// Basic ternary operations
+print true ? "yes" : "no"; // "yes"
+print false ? "yes" : "no"; // "no"
+print 1 == 1 ? "equal" : "not equal"; // "equal"
+print 1 != 1 ? "not equal" : "equal"; // "equal"
+
+// With numbers
+print 5 > 3 ? 100 : 200; // 100
+print 5 < 3 ? 100 : 200; // 200
+print 0 ? 1 : 2; // 1 (0 is truthy in this implementation)
+print 1 ? 1 : 2; // 1 (1 is truthy)
+
+// Nested ternary
+print true ? (false ? "inner true" : "inner false") : "outer false"; // "inner false"
+print false ? "outer true" : (true ? "inner true" : "inner false"); // "inner true"
+
+// With variables
+var x = 10;
+var y = 20;
+print x > y ? x : y; // 20 (max of x and y)
+print x < y ? x : y; // 10 (min of x and y)
+
+// With function calls
+fun getValue(n) {
+  return n * 2;
+}
+print true ? getValue(5) : getValue(10); // 10
+print false ? getValue(5) : getValue(10); // 20
+
+// With side effects
+var counter = 0;
+fun increment() {
+  counter = counter + 1;
+  return counter;
+}
+
+// Only the true branch should execute
+counter = 0;
+var result = true ? increment() : increment();
+print result; // 1
+print counter; // 1 (should only be incremented once)
+
+// Only the false branch should execute
+counter = 0;
+result = false ? increment() : increment();
+print result; // 1
+print counter; // 1 (should only be incremented once)
+
+// Complex conditions
+print (1 + 1 == 2) ? "math works" : "math broken"; // "math works"
+print (true and false) ? "both true" : "not both true"; // "not both true"
+print (true or false) ? "at least one true" : "both false"; // "at least one true"
+
+print "Ternary tests completed";

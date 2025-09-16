@@ -1,0 +1,18 @@
+=== Comma Operator Tests ===
+2
+3
+world
+false
+3
+3
+12
+false
+true
+30
+Side effect: first
+Side effect: second
+second
+2
+1
+2
+Comma tests completed

@@ -1,0 +1,23 @@
+=== Ternary Operator Tests ===
+yes
+no
+equal
+equal
+100
+200
+1
+1
+inner false
+inner true
+20
+10
+10
+20
+1
+1
+1
+1
+math works
+not both true
+at least one true
+Ternary tests completed

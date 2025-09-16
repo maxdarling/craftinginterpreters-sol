@@ -1,9 +1,9 @@
 P1:
 - make a grammar file (and then eventually write precedence unit tests based on it)
-- basic unit tests
-- refactor 'print' to be a native function, rather than a statement, as mentioned in FN in 10.2
-- after UT, do the parser l-assoc refactor. described in comment (might not be worth though)
-
+- add more UT (including large files)
+- after UT, do the parser l-assoc refactor (described in todo comment. might not be worth though)
 
 backlog:
+- refactor 'print' to be a native function, rather than a statement, as mentioned in FN in 10.2
 - write more error productions (makes the language more user-friendly)
+- static analysis: add warnings, e.g. unreachable code after return, unused variable (end of ch 11)

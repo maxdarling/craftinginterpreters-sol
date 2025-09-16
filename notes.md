@@ -17,3 +17,8 @@ Chapter 8
 
 Chapter 10
 - 10.4: "Mechanically, the code is pretty simple. Walk a couple of lists. Bind some new variables. Call a method. But this is where the crystalline code of the function declaration becomes a living, breathing invocation. This is one of my favorite snippets in this entire book. Feel free to take a moment to meditate on it if you’re so inclined."
+
+Chapter 11:
+- 11.1.2: persistent data structure are "the classic way to implement environments in Scheme interpreters". Interesting!
+- 11.1: "In most cases, in straight line code, the declaration preceding in text will also precede the usage in time. But that’s not always true. As we’ll see, functions may defer a chunk of code such that its dynamic temporal execution no longer mirrors the static textual ordering." This is why I found resolution of functions a bit harder to wrap my head around. The resolution pass is resolving var accesses during *function declarations*, but the runtime pass is using this info when the *function calls*.
+- 11.3: so beautiful that we get to reuse the visitor class.

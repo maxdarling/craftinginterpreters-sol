@@ -3,6 +3,9 @@ default: jlox
 jlox:
 	make -f util/java.make DIR=java PACKAGE=lox
 
+test: jlox
+	./test/test_runner.sh
+
 clean:
 	rm -rf build/
 
@@ -12,4 +15,4 @@ generate_ast:
 	@ java -cp build/java com.craftinginterpreters.tool.GenerateAst \
 			java/com/craftinginterpreters/lox
 
-.PHONY: jlox clean generate_ast
+.PHONY: jlox test clean generate_ast

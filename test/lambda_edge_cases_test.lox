@@ -1,0 +1,92 @@
+// Test lambda functions and edge cases
+print "=== Lambda Functions Edge Cases Tests ===";
+
+// Basic lambda function
+print "Basic lambda:";
+var add = fun(a, b) { return a + b; };
+print add(3, 4); // 7
+
+// Lambda with no parameters
+print "Lambda with no parameters:";
+var sayHello = fun() { return "Hello!"; };
+print sayHello(); // Hello!
+
+// Lambda with single parameter
+print "Lambda with single parameter:";
+var square = fun(x) { return x * x; };
+print square(5); // 25
+
+// Lambda capturing variables
+print "Lambda capturing variables:";
+var multiplier = 3;
+var multiply = fun(x) { return x * multiplier; };
+print multiply(4); // 12
+
+// Lambda returning lambda
+print "Lambda returning lambda:";
+var makeAdder = fun(n) {
+  return fun(x) { return x + n; };
+};
+var add5 = makeAdder(5);
+print add5(3); // 8
+
+// Lambda as function parameter
+print "Lambda as function parameter:";
+fun applyTwice(func, value) {
+  return func(func(value));
+}
+var increment = fun(x) { return x + 1; };
+print applyTwice(increment, 5); // 7
+
+// Lambda with complex closure
+print "Lambda with complex closure:";
+fun createCounter() {
+  var count = 0;
+  return fun() {
+    count = count + 1;
+    return count;
+  };
+}
+var counter1 = createCounter();
+var counter2 = createCounter();
+print counter1(); // 1
+print counter1(); // 2
+print counter2(); // 1
+print counter1(); // 3
+
+// Lambda with multiple closures
+print "Lambda with multiple closures:";
+fun makeCalculator(initial) {
+  var value = initial;
+  return fun(operation, operand) {
+    if (operation == "add") {
+      value = value + operand;
+    }
+    if (operation == "multiply") {
+      value = value * operand;
+    }
+    return value;
+  };
+}
+var calc = makeCalculator(10);
+print calc("add", 5); // 15
+print calc("multiply", 2); // 30
+
+// Recursive lambda
+print "Recursive lambda:";
+var factorial;
+factorial = fun(n) {
+  if (n <= 1) return 1;
+  return n * factorial(n - 1);
+};
+print factorial(5); // 120
+
+// Lambda with conditional logic
+print "Lambda with conditional logic:";
+var max = fun(a, b) {
+  return a > b ? a : b;
+};
+print max(7, 3); // 7
+print max(2, 8); // 8
+
+print "Lambda edge cases tests completed";

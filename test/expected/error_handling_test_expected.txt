@@ -1,0 +1,4 @@
+=== Error Handling and Edge Cases Tests ===
+Testing division by zero:
+Illegal division by 0
+[line 6]

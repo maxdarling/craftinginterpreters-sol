@@ -1,0 +1,81 @@
+// Test comparison operators (==, !=, <, <=, >, >=)
+print "=== Comparison Operators Tests ===";
+
+// Equality (==)
+print 1 == 1; // true
+print 1 == 2; // false
+print 1.0 == 1; // true
+print 1.5 == 1.5; // true
+print "hello" == "hello"; // true
+print "hello" == "world"; // false
+print true == true; // true
+print true == false; // false
+print nil == nil; // true
+print nil == 0; // false
+
+// Inequality (!=)
+print 1 != 1; // false
+print 1 != 2; // true
+print 1.0 != 1; // false
+print 1.5 != 1.5; // false
+print "hello" != "hello"; // false
+print "hello" != "world"; // true
+print true != true; // false
+print true != false; // true
+print nil != nil; // false
+print nil != 0; // true
+
+// Less than (<)
+print 1 < 2; // true
+print 2 < 1; // false
+print 1 < 1; // false
+print 1.5 < 2.5; // true
+print 2.5 < 1.5; // false
+// Note: String comparison not supported in this Lox implementation
+// print "a" < "b"; // Would cause error
+
+// Less than or equal (<=)
+print 1 <= 2; // true
+print 2 <= 1; // false
+print 1 <= 1; // true
+print 1.5 <= 2.5; // true
+print 2.5 <= 1.5; // false
+print 1.5 <= 1.5; // true
+// print "a" <= "b"; // Would cause error
+// print "b" <= "a"; // Would cause error
+// print "a" <= "a"; // Would cause error
+
+// Greater than (>)
+print 2 > 1; // true
+print 1 > 2; // false
+print 1 > 1; // false
+print 2.5 > 1.5; // true
+print 1.5 > 2.5; // false
+// print "b" > "a"; // Would cause error
+// print "a" > "b"; // Would cause error
+// print "a" > "a"; // Would cause error
+
+// Greater than or equal (>=)
+print 2 >= 1; // true
+print 1 >= 2; // false
+print 1 >= 1; // true
+print 2.5 >= 1.5; // true
+print 1.5 >= 2.5; // false
+print 1.5 >= 1.5; // true
+// print "b" >= "a"; // Would cause error
+// print "a" >= "b"; // Would cause error
+// print "a" >= "a"; // Would cause error
+
+// Mixed comparisons
+print 1 + 1 == 2; // true
+print 3 * 2 > 4; // true
+print 10 / 2 <= 5; // true
+print (1 + 1) != (2 * 1); // false
+
+// Edge cases
+print 0 == 0.0; // true
+print -1 < 0; // true
+print -1 > -2; // true
+print 0.0 < 0.1; // true
+
+print "Comparison tests completed";

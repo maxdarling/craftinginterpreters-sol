@@ -1,0 +1,42 @@
+// Test comma operator (evaluates left to right, returns rightmost value)
+print "=== Comma Operator Tests ===";
+
+// Basic comma operations
+print (1, 2); // 2
+print (1, 2, 3); // 3
+print ("hello", "world"); // "world"
+print (true, false); // false
+
+// With side effects
+var x = 0;
+print (x = 1, x = 2, x = 3); // 3
+print x; // 3
+
+// Mixed with other operators
+print (1 + 2, 3 * 4); // 12
+print (5 > 3, 2 < 1); // false
+print (true and false, true or false); // true
+
+// In variable assignment
+var result = (10, 20, 30);
+print result; // 30
+
+// With function calls
+fun sideEffect(value) {
+  print "Side effect: " + value;
+  return value;
+}
+
+print (sideEffect("first"), sideEffect("second")); // prints side effects, returns "second"
+
+// Note: Comma in for loop variable declarations not supported
+// Note: Multiple variable declarations in one statement not supported
+
+// Comma with assignment (individual variables)
+var a = 0;
+var b = 0;
+print (a = 1, b = 2); // 2
+print a; // 1
+print b; // 2
+
+print "Comma tests completed";
