@@ -1,0 +1,88 @@
+// Test nested blocks and variable scoping
+print "=== Nested Blocks and Scoping Tests ===";
+
+// Basic nested blocks
+print "Basic nested blocks:";
+var global = "global";
+{
+  var outer = "outer";
+  print global; // should access global
+  print outer;  // should access outer
+  {
+    var inner = "inner";
+    print global; // should access global
+    print outer;  // should access outer
+    print inner;  // should access inner
+  }
+  print global; // should access global
+  print outer;  // should access outer
+}
+print global; // should access global
+
+// Variable shadowing
+print "Variable shadowing:";
+var x = "global x";
+{
+  var x = "outer x";
+  print x; // should print "outer x"
+  {
+    var x = "inner x";
+    print x; // should print "inner x"
+  }
+  print x; // should print "outer x"
+}
+print x; // should print "global x"
+
+// Block scope with functions
+print "Block scope with functions:";
+var func;
+{
+  var captured = "captured value";
+  func = fun() {
+    print captured;
+  };
+}
+func(); // should print "captured value"
+
+// Blocks in control structures
+print "Blocks in if statements:";
+var condition = true;
+if (condition) {
+  var ifVar = "inside if";
+  print ifVar;
+  {
+    var nestedIfVar = "nested in if";
+    print nestedIfVar;
+  }
+}
+
+print "Blocks in while loops:";
+var counter = 0;
+while (counter < 2) {
+  var loopVar = "loop " + counter;
+  print loopVar;
+  counter = counter + 1;
+  {
+    var nestedLoopVar = "nested in loop";
+    print nestedLoopVar;
+  }
+}
+
+// Complex nesting
+print "Complex nesting:";
+var level0 = "level 0";
+{
+  var level1 = "level 1";
+  {
+    var level2 = "level 2";
+    {
+      var level3 = "level 3";
+      print level0;
+      print level1;
+      print level2;
+      print level3;
+    }
+  }
+}
+
+print "Nested blocks tests completed";

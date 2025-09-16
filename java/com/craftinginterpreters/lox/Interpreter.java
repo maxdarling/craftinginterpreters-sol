@@ -1,19 +1,20 @@
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Interpreter implements Expr.Visitor<Object>,
                              Stmt.Visitor<Void> {
-  final Environment globals = new Environment();
-  private Environment environment = globals;
-
-  private static Object uninitialized = new Object();
+  final Map<String, Object> globals = new HashMap<>();
+  private Environment environment;
+  private final Map<Expr, ResolvedVarInfo> locals = new HashMap<>();
 
   private static class LoopBreak extends RuntimeException {}
 
   Interpreter() {
-    globals.define("clock", new LoxCallable() {
+    globals.put("clock", new LoxCallable() {
       @Override
       public int arity() { return 0; }
 
@@ -56,6 +57,11 @@ class Interpreter implements Expr.Visitor<Object>,
     stmt.accept(this);
   }
 
+  void resolve(Expr expr, ResolvedVarInfo resolvedVar) {
+    locals.put(expr, resolvedVar);
+    return;
+  }
+
   void executeBlock(List<Stmt> statements, Environment environment) {
     Environment previous = this.environment;
     try {
@@ -73,7 +79,6 @@ class Interpreter implements Expr.Visitor<Object>,
   public Object visitLiteralExpr(Expr.Literal expr) {
     return expr.value;
   }
-
 
   @Override
   public Object visitGroupingExpr(Expr.Grouping expr) {
@@ -98,11 +103,25 @@ class Interpreter implements Expr.Visitor<Object>,
 
   @Override
   public Object visitVariableExpr(Expr.Variable expr) {
-    Object value = environment.get(expr.name);
-    if (value == uninitialized) {
+    Object value = lookUpVariable(expr.name, expr);
+    if (value == Environment.uninitialized) {
       throw new RuntimeError(expr.name, "Variable must be initialized before use.");
     }
     return value;
+  }
+
+  private Object lookUpVariable(Token name, Expr expr) {
+    ResolvedVarInfo info = locals.get(expr);
+    if (info != null) {
+      return environment.getAt(info.distance(), info.slot());
+    } else {
+      if (globals.containsKey(name.lexeme)) {
+        return globals.get(name.lexeme);
+      } else {
+        throw new RuntimeError(name,
+            "Undefined variable '" + name.lexeme + "'.");
+      }
+    }
   }
 
   @Override
@@ -189,7 +208,19 @@ class Interpreter implements Expr.Visitor<Object>,
   @Override
   public Object visitAssignExpr(Expr.Assign expr) {
     Object value = evaluate(expr.value);
-    environment.assign(expr.name, value);
+
+    ResolvedVarInfo info = locals.get(expr);
+    if (info != null) {
+      environment.assignAt(info.distance(), info.slot(), value);
+    } else {
+      if (globals.containsKey(expr.name.lexeme)) {
+        globals.put(expr.name.lexeme, value);
+      } else {
+        throw new RuntimeError(expr.name,
+            "Undefined variable '" + expr.name.lexeme + "'.");
+      }
+    }
+
     return value;
   }
 
@@ -221,7 +252,7 @@ class Interpreter implements Expr.Visitor<Object>,
   @Override
   public Void visitFunctionStmt(Stmt.Function stmt) {
     LoxFunction function = new LoxFunction(stmt.name.lexeme, stmt.function, environment);
-    environment.define(stmt.name.lexeme, function);
+    define(stmt.name, function);
     return null;
   }
 
@@ -273,12 +304,12 @@ class Interpreter implements Expr.Visitor<Object>,
 
   @Override
   public Void visitVarStmt(Stmt.Var stmt) {
-    Object value = uninitialized;
+    Object value = Environment.uninitialized;
     if (stmt.initializer != null) {
       value = evaluate(stmt.initializer);
     }
 
-    environment.define(stmt.name.lexeme, value);
+    define(stmt.name, value);
     return null;
   }
 
@@ -321,5 +352,24 @@ class Interpreter implements Expr.Visitor<Object>,
     }
 
     return object.toString();
+  }
+
+  void withForwardDeclare(Token name, java.util.function.Supplier<Object> valueSupplier) {
+    if (environment != null) {
+      int idx = environment.declare();
+      Object value = valueSupplier.get();
+      environment.assignAt(0, idx, value);
+    } else {
+      Object value = valueSupplier.get();
+      globals.put(name.lexeme, value); // no 2-step needed, since globals are not resolved
+    }
+  }
+
+  private void define(Token name, Object value) {
+    if (environment != null) {
+      environment.define(value);
+    } else {
+      globals.put(name.lexeme, value);
+    }
   }
 }

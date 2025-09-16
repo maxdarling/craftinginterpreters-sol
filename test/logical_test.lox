@@ -1,0 +1,53 @@
+// Test logical operators (and, or)
+print "=== Logical Operators Tests ===";
+
+// OR operator
+print true or false; // true
+print false or true; // true
+print true or true; // true
+print false or false; // false
+
+// AND operator
+print true and false; // false
+print false and true; // false
+print true and true; // true
+print false and false; // false
+
+// Short-circuit evaluation
+print "Testing short-circuit:";
+
+// OR short-circuit - second operand should not be evaluated
+var a = 0;
+print true or (a = 1); // true
+print a; // should still be 0
+
+var b = 0;
+print false or (b = 1); // 1 (assignment returns assigned value)
+print b; // should be 1
+
+// AND short-circuit - second operand should not be evaluated
+var c = 0;
+print false and (c = 1); // false
+print c; // should still be 0
+
+var d = 0;
+print true and (d = 1); // 1 (assignment returns assigned value)
+print d; // should be 1
+
+// Complex logical expressions
+print true and true and false; // false
+print true and true and true; // true
+print false or false or true; // true
+print false or false or false; // false
+
+// Mixed with other operators
+print (1 < 2) and (3 > 1); // true
+print (1 > 2) or (3 < 1); // false
+print (1 == 1) and (2 != 3); // true
+
+// Precedence tests
+print true or false and false; // true (or has lower precedence than and)
+print (true or false) and false; // false
+print true or (false and false); // true
+
+print "Logical tests completed";

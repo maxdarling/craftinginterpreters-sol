@@ -238,7 +238,7 @@ class Parser {
     return comma();
   }
 
-  // : encapsulate this and all other higher-precedence expr matching funcs into a single func parameterized on
+  // todo: encapsulate this and all other higher-precedence expr matching funcs into a single func parameterized on
   // operator and operand type. we can do this because all take the form A = B ((op1 | op2 | ...) B)*
   // i.e., it's left associate, and done in this flat while loop style. analog could be done for r-assoc, too.
   private Expr comma() {

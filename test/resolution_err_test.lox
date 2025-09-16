@@ -1,0 +1,14 @@
+var a = "outer";
+{
+  var a = a;
+}
+
+fun bad() {
+  var a = "first";
+  var a = "second";
+
+  var b = "unused";
+  var c = "unused";
+}
+
+return "at top level";

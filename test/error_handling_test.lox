@@ -1,0 +1,66 @@
+// Test error handling and edge cases
+print "=== Error Handling and Edge Cases Tests ===";
+
+// Division by zero (should handle gracefully)
+print "Testing division by zero:";
+print 5 / 0; // Should produce Infinity or handle error
+
+// Type errors (should be caught at runtime)
+print "Testing type operations:";
+// These should produce runtime errors but we'll test what actually happens
+print "String operations:";
+print "hello" + 123; // String concatenation with number
+print 123 + "world"; // Number + string
+
+// Undefined variable access (should produce error)
+print "Testing undefined variable:";
+// This should cause an error: print undefinedVar;
+
+// Function call on non-function
+print "Testing invalid function calls:";
+var notAFunction = "I'm not a function";
+// This should cause an error: notAFunction();
+
+// Wrong number of arguments
+print "Testing argument count:";
+fun twoArgs(a, b) {
+  return a + b;
+}
+// These should cause errors:
+// print twoArgs(1); // too few
+// print twoArgs(1, 2, 3); // too many
+
+// Return outside function
+print "Testing return outside function:";
+// This should cause an error: return 42;
+
+// Break outside loop
+print "Testing break outside loop:";
+// This should cause an error: break;
+
+// Nil operations
+print "Testing nil operations:";
+print nil == nil; // true
+print nil != nil; // false
+print !nil; // true (nil is falsy)
+
+// Edge cases with numbers
+print "Testing number edge cases:";
+print 0.0 == 0; // true
+print -0.0; // -0
+print 1.0 / 0.0; // Infinity or error
+
+// Edge cases with strings
+print "Testing string edge cases:";
+print ""; // empty string
+print "" == ""; // true
+print "" + "hello"; // "hello"
+print "hello" + ""; // "hello"
+
+// Edge cases with booleans
+print "Testing boolean edge cases:";
+print true == true; // true
+print false == false; // true
+print true != false; // true
+
+print "Error handling tests completed";

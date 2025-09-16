@@ -1,0 +1,31 @@
+=== Nested Blocks and Scoping Tests ===
+Basic nested blocks:
+global
+outer
+global
+outer
+inner
+global
+outer
+global
+Variable shadowing:
+outer x
+inner x
+outer x
+global x
+Block scope with functions:
+captured value
+Blocks in if statements:
+inside if
+nested in if
+Blocks in while loops:
+loop 0
+nested in loop
+loop 1
+nested in loop
+Complex nesting:
+level 0
+level 1
+level 2
+level 3
+Nested blocks tests completed

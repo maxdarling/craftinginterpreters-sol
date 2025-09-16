@@ -30,8 +30,7 @@ class LoxFunction implements LoxCallable {
                      List<Object> arguments) {
     Environment environment = new Environment(closure);
     for (int i = 0; i < declaration.params.size(); i++) {
-      environment.define(declaration.params.get(i).lexeme,
-          arguments.get(i));
+      environment.define(arguments.get(i));
     }
 
     try {
@@ -41,5 +40,4 @@ class LoxFunction implements LoxCallable {
     }
     return null;
   }
-
 }

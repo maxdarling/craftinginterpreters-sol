@@ -1,0 +1,41 @@
+// Test basic arithmetic operations
+print "=== Arithmetic Operations Tests ===";
+
+// Addition
+print 1 + 2; // 3
+print 1.5 + 2.5; // 4.0
+print "hello" + " " + "world"; // "hello world"
+
+// Subtraction
+print 5 - 3; // 2
+print 10.5 - 2.5; // 8.0
+
+// Multiplication
+print 3 * 4; // 12
+print 2.5 * 4; // 10.0
+
+// Division
+print 12 / 3; // 4.0
+print 15 / 4; // 3.75
+print 7 / 2; // 3.5
+
+// Mixed operations with precedence
+print 2 + 3 * 4; // 14 (not 20)
+print (2 + 3) * 4; // 20
+print 10 - 2 * 3; // 4 (not 24)
+print (10 - 2) * 3; // 24
+
+// Negative numbers
+print -5; // -5
+print -(-5); // 5
+print 5 + -3; // 2
+print 5 - -3; // 8
+
+// Zero operations
+print 0 + 5; // 5
+print 5 + 0; // 5
+print 0 * 5; // 0
+print 5 * 0; // 0
+print 5 / 1; // 5.0
+
+print "Arithmetic tests completed";

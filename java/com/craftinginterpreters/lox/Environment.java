@@ -1,11 +1,13 @@
 package com.craftinginterpreters.lox;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 class Environment {
   final Environment enclosing;
-  private final Map<String, Object> values = new HashMap<>();
+  private final List<Object> values = new ArrayList<>();
+
+  static Object uninitialized = new Object();
 
   Environment() {
     enclosing = null;
@@ -15,33 +17,29 @@ class Environment {
     this.enclosing = enclosing;
   }
 
-  void define(String name, Object value) {
-    values.put(name, value);
+  int declare() {
+    values.add(uninitialized);
+    return values.size() - 1;
   }
 
-  Object get(Token name) {
-    if (values.containsKey(name.lexeme)) {
-      return values.get(name.lexeme);
-    }
-
-    if (enclosing != null) return enclosing.get(name);
-
-    throw new RuntimeError(name,
-        "Undefined variable '" + name.lexeme + "'.");
+  void define(Object value) {
+    values.add(value);
   }
 
-  void assign(Token name, Object value) {
-    if (values.containsKey(name.lexeme)) {
-      values.put(name.lexeme, value);
-      return;
+  Environment ancestor(int distance) {
+    Environment environment = this;
+    for (int i = 0; i < distance; i++) {
+      environment = environment.enclosing;
     }
 
-    if (enclosing != null) {
-      enclosing.assign(name, value);
-      return;
-    }
+    return environment;
+  }
 
-    throw new RuntimeError(name,
-        "Undefined variable '" + name.lexeme + "'.");
+  Object getAt(int distance, int idx) {
+    return ancestor(distance).values.get(idx);
+  }
+
+  void assignAt(int distance, int idx, Object value) {
+    ancestor(distance).values.set(idx, value);
   }
 }

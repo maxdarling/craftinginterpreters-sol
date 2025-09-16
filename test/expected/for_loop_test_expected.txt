@@ -1,0 +1,46 @@
+=== For Loop Tests ===
+Basic for loop:
+0
+1
+2
+3
+4
+For loop with step 2:
+0
+2
+4
+6
+8
+For loop decrementing:
+5
+4
+3
+2
+1
+For loop with pre-initialized variable:
+3
+4
+5
+For loop with break:
+0
+1
+2
+For loop with manual increment:
+0
+1
+2
+Nested for loops:
+(1,1)
+(1,2)
+(2,1)
+(2,2)
+For loop with complex expressions:
+1 squared is 1
+2 squared is 4
+3 squared is 9
+4 squared is 16
+For loop variable scoping:
+inside: 0
+inside: 1
+after loop: outside
+For loop tests completed

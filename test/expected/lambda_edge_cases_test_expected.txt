@@ -1,0 +1,27 @@
+=== Lambda Functions Edge Cases Tests ===
+Basic lambda:
+7
+Lambda with no parameters:
+Hello!
+Lambda with single parameter:
+25
+Lambda capturing variables:
+12
+Lambda returning lambda:
+8
+Lambda as function parameter:
+7
+Lambda with complex closure:
+1
+2
+1
+3
+Lambda with multiple closures:
+15
+30
+Recursive lambda:
+120
+Lambda with conditional logic:
+7
+8
+Lambda edge cases tests completed

@@ -1,0 +1,7 @@
+[line 3] Error at 'a': Can't read local variable in its own initializer.
+[line 3] Error at 'a': Local variable is not used.
+[line 8] Error at 'a': Already a variable with this name in this scope.
+[line 8] Error at 'a': Local variable is not used.
+[line 10] Error at 'b': Local variable is not used.
+[line 11] Error at 'c': Local variable is not used.
+[line 14] Error at 'return': Can't return from top-level code.
