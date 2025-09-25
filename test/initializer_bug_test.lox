@@ -1,0 +1,17 @@
+// Test to demonstrate the initializer return value bug
+
+print "=== Testing Initializer Return Value Bug ===";
+
+// This test should fail at compile time, but if it doesn't, it demonstrates the bug
+class BuggyInit {
+  init(value) {
+    this.value = value;
+    return "this should be ignored"; // This should cause a compile error
+  }
+}
+
+// If the above compiles, this would demonstrate the bug:
+// var buggy = BuggyInit(42);
+// print buggy; // Should print "BuggyInit instance", not "this should be ignored"
+
+print "Test completed - check if initializer return value causes compile error";

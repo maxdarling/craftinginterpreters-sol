@@ -20,11 +20,18 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   private final Interpreter interpreter;
   private final Stack<Map<String, Variable>> scopes = new Stack<Map<String, Variable>>();
   private FunctionType currentFunction = FunctionType.NONE;
+  private ClassType currentClass = ClassType.NONE;
 
   private enum FunctionType {
     NONE,
     FUNCTION,
+    INITIALIZER,
     METHOD
+  }
+
+  private enum ClassType {
+    NONE,
+    CLASS
   }
 
   private static class Variable {
@@ -60,6 +67,46 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     beginScope();
     resolve(stmt.statements);
     endScope();
+    return null;
+  }
+
+  @Override
+  public Void visitClassStmt(Stmt.Class stmt) {
+    ClassType enclosingClass = currentClass;
+    currentClass = ClassType.CLASS;
+
+    declare(stmt.name);
+    define(stmt.name);
+
+    beginScope();
+    // reminder: why we create a new scope here is a little tricky.
+    // at runtime when we create handles for methods (LoxInstance.get()) we bind 'this' by wrapping
+    // it in a closure. the scope we create here corresponds to that closure/env.
+    // see book 12.6 for a great explanation.
+
+    // scopes.peek().put("this", true);
+    // note: book does above, perhaps to avoid defining a Token. for me it's easiest to just dummy the
+    // token as below. should be fine.
+    Token thiz = new Token(TokenType.THIS, "this", null, -1);
+    declare(thiz);
+    define(thiz);
+    scopes.peek().get(thiz.lexeme).state = Variable.State.READ; // exempt from unused var check
+    // todo: above: understand why I need to mark this as read.
+
+    for (Stmt.Function method : stmt.methods) {
+      FunctionType declaration = FunctionType.METHOD;
+      if (method.name.lexeme.equals("init")) {
+        declaration = FunctionType.INITIALIZER;
+      }
+      // reminder: method lookup is dynamic. they're accessed as properties on instances.
+      // so no declare/define here.
+      resolveFunction(method.function, declaration);
+    }
+
+
+    endScope();
+
+    currentClass = enclosingClass;
     return null;
   }
 
@@ -104,6 +151,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     if (stmt.value != null) {
+      if (currentFunction == FunctionType.INITIALIZER) {
+        Lox.error(stmt.keyword, "Can't return a value from an initializer.");
+      }
+
       resolve(stmt.value);
     }
 
@@ -167,6 +218,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   }
 
   @Override
+  public Void visitGetExpr(Expr.Get expr) {
+    resolve(expr.object);
+    return null;
+  }
+
+  @Override
   public Void visitGroupingExpr(Expr.Grouping expr) {
     resolve(expr.expression);
     return null;
@@ -181,6 +238,24 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitLogicalExpr(Expr.Logical expr) {
     resolve(expr.left);
     resolve(expr.right);
+    return null;
+  }
+
+  @Override
+  public Void visitSetExpr(Expr.Set expr) {
+    resolve(expr.value);
+    resolve(expr.object);
+    return null;
+  }
+
+  @Override
+  public Void visitThisExpr(Expr.This expr) {
+    if (currentClass == ClassType.NONE) {
+      Lox.error(expr.keyword, "Can't use 'this' outside of a class.");
+      return null;
+    }
+
+    resolveLocal(expr, expr.keyword, true);
     return null;
   }
 

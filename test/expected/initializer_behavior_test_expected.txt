@@ -1,0 +1,6 @@
+=== Testing Initializer Behavior ===
+ComplexInit instance
+21
+42
+18
+Initializer tests completed

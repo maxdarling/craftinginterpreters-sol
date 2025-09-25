@@ -1,0 +1,20 @@
+ch 12 stash
+
+kept:
+- lox class, lox instance, GRAMMAR, generateAst, expr, stmt
+
+
+
+RESOLVER
+// scopes.peek().put("this", true);
+    // note: book does above, perhaps to avoid defining a Token. for me it's easiest to just dummy the
+    // token as below. should be fine.
+    Token thiz = new Token(TokenType.THIS, "this", null, -1);
+    declare(thiz);
+    define(thiz);
+    scopes.peek().get(thiz.lexeme).state = Variable.State.READ; // exempt from unused var check
+
+LOX FUNCTION
+      // if (isInitializer) return closure.getAt(0, "this");
+      // Todo: confirm below is sound. I assume that "this" will always be the first bound in the scope...
+      if (isInitializer) return closure.getAt(0, 0);

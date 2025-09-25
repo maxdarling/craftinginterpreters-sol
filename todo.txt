@@ -1,6 +1,5 @@
 P1:
-- make a grammar file (and then eventually write precedence unit tests based on it)
-- add more UT (including large files)
+- read and understand all UT, since they're LLM generated (kindof a chore...)
 - after UT, do the parser l-assoc refactor (described in todo comment. might not be worth though)
 
 backlog:

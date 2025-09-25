@@ -1,0 +1,48 @@
+=== Class Declaration Tests ===
+Test 1 passed: Empty class declared
+Test 2 passed: Class with methods declared
+TestClass
+\n=== Class Instantiation Tests ===
+EmptyClass instance
+Calculator instance
+Calculator instance
+\n=== Method Call Tests ===
+8
+28
+3
+30
+\n=== Property Access Tests ===
+Alice
+30
+Hello, I'm Alice
+Bob
+Hello, I'm Bob
+\n=== This Keyword Tests ===
+1
+2
+2
+test outer
+\n=== Initializer Tests ===
+3
+4
+7
+ValidInit instance
+42
+NoReturn instance
+100
+\n=== Error Handling Tests ===
+\n=== Complex Integration Tests ===
+John has $1000
+1500
+1300
+John has $1300
+Alice has $500
+Bob has $2000
+Alice has $600
+Bob has $1500
+\n=== Edge Cases ===
+EmptyInit instance
+72
+Local: shadowed
+instance
+\n=== All Class Unit Tests Completed ===

@@ -1,0 +1,31 @@
+// Test to check if class name is accessible within methods
+
+print "=== Testing Class Name Access Within Methods ===";
+
+class SelfReference {
+  init() {
+    this.name = "instance";
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getClassName() {
+    // This should work - accessing the class name from within a method
+    return SelfReference; // Should return the class object
+  }
+
+  createAnother() {
+    // This should also work - creating another instance from within a method
+    return SelfReference();
+  }
+}
+
+var instance = SelfReference();
+print instance.getName(); // Should print "instance"
+print instance.getClassName(); // Should print "SelfReference"
+var another = instance.createAnother();
+print another; // Should print "SelfReference instance"
+
+print "Test completed";

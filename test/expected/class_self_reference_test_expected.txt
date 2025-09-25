@@ -1,0 +1,5 @@
+=== Testing Class Name Access Within Methods ===
+instance
+SelfReference
+SelfReference instance
+Test completed

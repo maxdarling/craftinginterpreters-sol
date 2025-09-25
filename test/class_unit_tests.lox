@@ -1,0 +1,252 @@
+// Unit tests for class functionality
+// These tests cover all aspects of the class implementation
+
+print "=== Class Declaration Tests ===";
+
+// Test 1: Basic class declaration
+class EmptyClass {}
+print "Test 1 passed: Empty class declared";
+
+// Test 2: Class with methods
+class Calculator {
+  add(a, b) {
+    return a + b;
+  }
+
+  multiply(a, b) {
+    return a * b;
+  }
+}
+print "Test 2 passed: Class with methods declared";
+
+// Test 3: Class toString representation
+class TestClass {}
+print TestClass; // Should print "TestClass"
+
+print "\n=== Class Instantiation Tests ===";
+
+// Test 4: Basic instantiation
+var empty = EmptyClass();
+print empty; // Should print "EmptyClass instance"
+
+// Test 5: Multiple instances
+var calc1 = Calculator();
+var calc2 = Calculator();
+print calc1; // Should print "Calculator instance"
+print calc2; // Should print "Calculator instance"
+
+print "\n=== Method Call Tests ===";
+
+// Test 6: Method calls
+var calc = Calculator();
+print calc.add(5, 3); // Should print 8
+print calc.multiply(4, 7); // Should print 28
+
+// Test 7: Method calls on different instances
+var calcA = Calculator();
+var calcB = Calculator();
+print calcA.add(1, 2); // Should print 3
+print calcB.add(10, 20); // Should print 30
+
+print "\n=== Property Access Tests ===";
+
+// Test 8: Setting and getting properties
+class Person {
+  greet() {
+    return "Hello, I'm " + this.name;
+  }
+}
+
+var person = Person();
+person.name = "Alice";
+person.age = 30;
+print person.name; // Should print "Alice"
+print person.age; // Should print 30
+
+// Test 9: Property access through this
+print person.greet(); // Should print "Hello, I'm Alice"
+
+// Test 10: Property assignment
+person.name = "Bob";
+print person.name; // Should print "Bob"
+print person.greet(); // Should print "Hello, I'm Bob"
+
+print "\n=== This Keyword Tests ===";
+
+// Test 11: This in methods
+class Counter {
+  increment() {
+    this.value = this.value + 1;
+    return this.value;
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+var counter = Counter();
+counter.value = 0;
+print counter.increment(); // Should print 1
+print counter.increment(); // Should print 2
+print counter.getValue(); // Should print 2
+
+// Test 12: This in nested scopes
+class ScopeTest {
+  outer() {
+    var x = "outer";
+    fun inner() {
+      return this.name + " " + x;
+    }
+    return inner();
+  }
+}
+
+var scope = ScopeTest();
+scope.name = "test";
+print scope.outer(); // Should print "test outer"
+
+print "\n=== Initializer Tests ===";
+
+// Test 13: Basic initializer
+class Point {
+  init(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  distance() {
+    return this.x + this.y;
+  }
+}
+
+var point = Point(3, 4);
+print point.x; // Should print 3
+print point.y; // Should print 4
+print point.distance(); // Should print 7
+
+// Test 14: Initializer with return value (should cause error)
+// This test is commented out because initializers can't return values
+// class ReturnTest {
+//   init(value) {
+//     this.value = value;
+//     return "ignored"; // This should cause an error
+//   }
+// }
+
+// Test 14b: Valid initializer without return
+class ValidInit {
+  init(value) {
+    this.value = value;
+  }
+}
+
+var ret = ValidInit(42);
+print ret; // Should print "ValidInit instance"
+print ret.value; // Should print 42
+
+// Test 15: Initializer without explicit return
+class NoReturn {
+  init(value) {
+    this.value = value;
+  }
+}
+
+var noRet = NoReturn(100);
+print noRet; // Should print "NoReturn instance"
+print noRet.value; // Should print 100
+
+print "\n=== Error Handling Tests ===";
+
+// Test 16: Accessing undefined property
+class ErrorTest {}
+var errorTest = ErrorTest();
+// This should cause a runtime error:
+// errorTest.undefinedProperty;
+
+// Test 17: Using this outside of class
+// This should cause a compile error:
+// var x = this;
+
+print "\n=== Complex Integration Tests ===";
+
+// Test 18: Class with multiple methods and properties
+class BankAccount {
+  init(owner, initialBalance) {
+    this.owner = owner;
+    this.balance = initialBalance;
+  }
+
+  deposit(amount) {
+    this.balance = this.balance + amount;
+    return this.balance;
+  }
+
+  withdraw(amount) {
+    if (this.balance >= amount) {
+      this.balance = this.balance - amount;
+      return this.balance;
+    } else {
+      return "Insufficient funds";
+    }
+  }
+
+  getInfo() {
+    return this.owner + " has $" + this.balance;
+  }
+}
+
+var account = BankAccount("John", 1000);
+print account.getInfo(); // Should print "John has $1000"
+print account.deposit(500); // Should print 1500
+print account.withdraw(200); // Should print 1300
+print account.getInfo(); // Should print "John has $1300"
+
+// Test 19: Multiple instances with different state
+var account1 = BankAccount("Alice", 500);
+var account2 = BankAccount("Bob", 2000);
+print account1.getInfo(); // Should print "Alice has $500"
+print account2.getInfo(); // Should print "Bob has $2000"
+account1.deposit(100);
+account2.withdraw(500);
+print account1.getInfo(); // Should print "Alice has $600"
+print account2.getInfo(); // Should print "Bob has $1500"
+
+print "\n=== Edge Cases ===";
+
+// Test 20: Empty initializer
+class EmptyInit {
+  init() {
+  }
+}
+
+var emptyInit = EmptyInit();
+print emptyInit; // Should print "EmptyInit instance"
+
+// Test 21: Method without this usage
+class StaticLike {
+  compute(a, b) {
+    return a * b + 42;
+  }
+}
+
+var staticLike = StaticLike();
+print staticLike.compute(5, 6); // Should print 72
+
+// Test 22: Property shadowing
+class ShadowTest {
+  init(value) {
+    this.value = value;
+  }
+
+  getValue() {
+    var localValue = "shadowed";
+    print "Local: " + localValue; // Use the local variable
+    return this.value; // Should return instance property, not local var
+  }
+}
+
+var shadow = ShadowTest("instance");
+print shadow.getValue(); // Should print "instance"
+
+print "\n=== All Class Unit Tests Completed ===";

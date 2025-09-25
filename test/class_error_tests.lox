@@ -1,0 +1,162 @@
+// Additional error condition and edge case tests for class functionality
+
+print "=== Error Condition Tests ===";
+
+// Test 1: Accessing undefined property (should cause runtime error)
+print "Testing undefined property access...";
+class ErrorTest {}
+var errorTest = ErrorTest();
+// Uncomment the next line to test runtime error:
+// print errorTest.undefinedProperty;
+
+// Test 2: Using this outside of class (should cause compile error)
+print "Testing 'this' outside class...";
+// Uncomment the next line to test compile error:
+// var x = this;
+
+// Test 3: Calling method on non-instance (should cause runtime error)
+print "Testing method call on non-instance...";
+var notAnInstance = "string";
+// Uncomment the next line to test runtime error:
+// notAnInstance.someMethod();
+
+// Test 4: Setting property on non-instance (should cause runtime error)
+print "Testing property set on non-instance...";
+var notAnInstance2 = 42;
+// Uncomment the next line to test runtime error:
+// notAnInstance2.property = "value";
+
+print "\n=== Edge Case Tests ===";
+
+// Test 5: Class with no methods
+class NoMethods {}
+var noMethods = NoMethods();
+print noMethods; // Should print "NoMethods instance"
+
+// Test 6: Method that doesn't use this
+class StaticMethod {
+  add(a, b) {
+    return a + b;
+  }
+}
+var staticMethod = StaticMethod();
+print staticMethod.add(10, 20); // Should print 30
+
+// Test 7: Property with same name as method
+class NameConflict {
+  value() {
+    return "method";
+  }
+}
+var conflict = NameConflict();
+conflict.value = "property";
+print conflict.value; // Should print "property" (property shadows method)
+// Note: Once a property shadows a method, you can't call the method anymore
+// This is correct behavior - properties take precedence over methods
+
+// Test 8: Nested class declarations (should work)
+{
+  class InnerClass {
+    innerMethod() {
+      return "inner";
+    }
+  }
+  var inner = InnerClass();
+  print inner.innerMethod(); // Should print "inner"
+}
+
+// Test 9: Class with init that doesn't set any properties
+class EmptyInit {
+  init() {
+    // Do nothing
+  }
+}
+var emptyInit = EmptyInit();
+print emptyInit; // Should print "EmptyInit instance"
+
+// Test 10: Method that returns this
+class Chainable {
+  init(value) {
+    this.value = value;
+  }
+
+  add(x) {
+    this.value = this.value + x;
+    return this; // Return self for chaining
+  }
+
+  multiply(x) {
+    this.value = this.value * x;
+    return this;
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+var chain = Chainable(5);
+print chain.add(3).multiply(2).getValue(); // Should print 16
+
+print "\n=== Method Binding Tests ===";
+
+// Test 11: Method binding preserves this correctly
+class BindingTest {
+  init(name) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getBoundMethod() {
+    return this.getName; // Return method reference
+  }
+}
+
+var binding = BindingTest("test");
+var methodRef = binding.getBoundMethod();
+print methodRef(); // Should print "test"
+
+print "\n=== Complex Scoping Tests ===";
+
+// Test 12: Method with closure over this
+class ClosureTest {
+  init(value) {
+    this.value = value;
+  }
+
+  createClosure() {
+    fun closure() {
+      return this.value;
+    }
+    return closure;
+  }
+}
+
+var closureTest = ClosureTest(42);
+var closure = closureTest.createClosure();
+print closure(); // Should print 42
+
+// Test 13: Method that modifies this in closure
+class ModifyingClosure {
+  init(value) {
+    this.value = value;
+  }
+
+  createModifyingClosure() {
+    fun modify() {
+      this.value = this.value * 2;
+    }
+    return modify;
+  }
+}
+
+var modifying = ModifyingClosure(10);
+print modifying.value; // Should print 10
+var modifier = modifying.createModifyingClosure();
+modifier();
+print modifying.value; // Should print 20
+
+print "\n=== All Additional Tests Completed ===";

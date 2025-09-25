@@ -1,0 +1,147 @@
+// Comprehensive test suite for class functionality bugs and edge cases
+
+print "=== Comprehensive Class Bug Test Suite ===";
+
+// Test 1: Initializer without explicit return (should work)
+class Test1 {
+  init(value) {
+    this.value = value;
+  }
+}
+var test1 = Test1(42);
+print test1; // Should print "Test1 instance"
+print test1.value; // Should print 42
+
+// Test 2: Initializer with explicit return nil (should cause compile error)
+// This is commented out because initializers can't return values, even nil
+// class Test2 {
+//   init(value) {
+//     this.value = value;
+//     return nil;
+//   }
+// }
+// Test 2b: Valid initializer without return
+class Test2 {
+  init(value) {
+    this.value = value;
+  }
+}
+var test2 = Test2(84);
+print test2; // Should print "Test2 instance"
+print test2.value; // Should print 84
+
+// Test 3: Initializer with explicit return (should cause compile error)
+// This is commented out because it should fail at compile time
+// class Test3 {
+//   init(value) {
+//     this.value = value;
+//     return "invalid";
+//   }
+// }
+
+// Test 4: Method that returns this
+class Test4 {
+  init(value) {
+    this.value = value;
+  }
+
+  increment() {
+    this.value = this.value + 1;
+    return this;
+  }
+}
+var test4 = Test4(0);
+print test4.increment().increment().value; // Should print 2
+
+// Test 5: Method binding and this access
+class Test5 {
+  init(name) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getBoundMethod() {
+    return this.getName;
+  }
+}
+var test5 = Test5("test");
+var method = test5.getBoundMethod();
+print method(); // Should print "test"
+
+// Test 6: Property shadowing method
+class Test6 {
+  value() {
+    return "method";
+  }
+}
+var test6 = Test6();
+print test6.value(); // Should print "method"
+test6.value = "property";
+print test6.value; // Should print "property"
+// test6.value(); // This should fail - can't call string as function
+
+// Test 7: Class with no initializer
+class Test7 {
+  setValue(value) {
+    this.value = value;
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+var test7 = Test7();
+test7.setValue(100);
+print test7.getValue(); // Should print 100
+
+// Test 8: Nested class declarations
+{
+  class Inner {
+    init(value) {
+      this.value = value;
+    }
+  }
+  var inner = Inner(200);
+  print inner.value; // Should print 200
+}
+
+// Test 9: Class with method that creates closure over this
+class Test9 {
+  init(value) {
+    this.value = value;
+  }
+
+  createClosure() {
+    fun closure() {
+      return this.value;
+    }
+    return closure;
+  }
+}
+var test9 = Test9(300);
+var closure = test9.createClosure();
+print closure(); // Should print 300
+
+// Test 10: Multiple instances with different state
+class Test10 {
+  init(id) {
+    this.id = id;
+    this.count = 0;
+  }
+
+  increment() {
+    this.count = this.count + 1;
+    return this.count;
+  }
+}
+var test10a = Test10("A");
+var test10b = Test10("B");
+print test10a.increment(); // Should print 1
+print test10b.increment(); // Should print 1
+print test10a.increment(); // Should print 2
+print test10b.increment(); // Should print 2
+
+print "\n=== All Comprehensive Tests Completed ===";

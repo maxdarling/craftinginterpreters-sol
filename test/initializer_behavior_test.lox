@@ -1,0 +1,45 @@
+// Test to check initializer behavior with complex scenarios
+
+print "=== Testing Initializer Behavior ===";
+
+class ComplexInit {
+  init(value) {
+    this.value = value;
+    this.computed = value * 2;
+    // No explicit return - should return the instance
+  }
+
+  getValue() {
+    return this.value;
+  }
+
+  getComputed() {
+    return this.computed;
+  }
+}
+
+var complex = ComplexInit(21);
+print complex; // Should print "ComplexInit instance"
+print complex.getValue(); // Should print 21
+print complex.getComputed(); // Should print 42
+
+// Test with method that returns this
+class ChainInit {
+  init(value) {
+    this.value = value;
+  }
+
+  add(x) {
+    this.value = this.value + x;
+    return this;
+  }
+
+  getValue() {
+    return this.value;
+  }
+}
+
+var chain = ChainInit(10);
+print chain.add(5).add(3).getValue(); // Should print 18
+
+print "Initializer tests completed";
